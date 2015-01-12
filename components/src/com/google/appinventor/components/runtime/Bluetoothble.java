@@ -195,10 +195,10 @@ public final class Bluetoothble extends BluetoothConnectionBase implements Bluet
     return acceptableDeviceClasses.contains(deviceClass);
   }
 
-  // alecuba16
   
   /**
-   * Connects to a Bluetooth device with the given address and UUID.
+   * alecuba16
+   * Connects to a Bluetooth device with the given address and UUID. 
    *
    * If the address contains a space, the space and any characters after it are ignored. This
    * facilitates passing an element of the list returned from the addressesAndNames method above.
