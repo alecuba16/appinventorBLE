@@ -285,8 +285,19 @@ public class YaVersion {
   // - WEB_COMPONENT_VERSION was incremented to 4.
   // For YOUNG_ANDROID_VERSION 106:
   // - LISTVIEW_COMPONENT_VERSION was incremented to 3.
+  // For YOUNG_ANDROID_VERSION 107:
+  // - WEBVIEWER_COMPONENT_VERSION was incremented to 5
+  // For YOUNG_ANDROID_VERSION 108:
+  // - New Obsfucate Text Block was added.
+  //   Note: BLOCKS_LANGUAGE_VERSION would normally be incremented as
+  //   well, but we don't have any code that deals with it, so we
+  //   won't do it for this change
+  // For YOUNG_ANDROID_VERION 109:
+  // - Added PROXIMITYSENSOR_COMPONENT_VERSION
+  // For YOUNG_ANDROID_VERSION 110:
+  // - LABEL_COMPONENT_VERSION was incremented to 3.
 
-  public static final int YOUNG_ANDROID_VERSION = 106;
+  public static final int YOUNG_ANDROID_VERSION = 110;
 
   // ............................... Blocks Language Version Number ...............................
 
@@ -574,7 +585,9 @@ public class YaVersion {
 
   // For LABEL_COMPONENT_VERSION 2:
   // - The Alignment property was renamed to TextAlignment.
-  public static final int LABEL_COMPONENT_VERSION = 2;
+  // For LABEL_COMPONENT_VERSION 3:
+  // - The HasMargins property was added
+  public static final int LABEL_COMPONENT_VERSION = 3;
 
   public static final int NXT_COLORSENSOR_COMPONENT_VERSION = 1;
 
@@ -779,21 +792,13 @@ public class YaVersion {
   // - Add UsesLocation property to set location permissions
   // For WEBVIEWER_COMPONENT_VERSION 4:
   // - Add WebViewString
-  public static final int WEBVIEWER_COMPONENT_VERSION = 4;
+  // For WEBVIEWER_COMPONENT_VERSION 5:
+  // - IgnoreSslError property added
+  public static final int WEBVIEWER_COMPONENT_VERSION = 5;
 
   // For SLIDER_COMPONENT_VERSION 1:
   // - Initial version.
   public static final int SLIDER_COMPONENT_VERSION = 1;
-
-
-  // For BLUETOOTHBLESCANCALLBACK_COMPONENT_VERSION 1:
-  // - Initial Version.
-  public static final int BLUETOOTHBLESCANCALLBACK_COMPONENT_VERSION = 1;
-
-
-  // For BLUETOOTHBLECALLBACK_COMPONENT_VERSION 1:
-  // - Initial Version.
-  public static final int BLUETOOTHBLECALLBACK_COMPONENT_VERSION = 1;
 
 
   // For BLUETOOTHBLE_COMPONENT_VERSION 1:
@@ -816,6 +821,9 @@ public class YaVersion {
   // For YANDEX_COMPONENT_VERSION 1:
   // - Initial version.
   public static final int YANDEX_COMPONENT_VERSION = 1;
+
+  //For PROXIMITYSENSOR_COMPONENT_VERSION: Initial Version
+  public static final int PROXIMITYSENSOR_COMPONENT_VERSION = 1;
 
   // Rendezvous Server Location
 

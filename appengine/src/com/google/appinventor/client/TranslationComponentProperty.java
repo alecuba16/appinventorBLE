@@ -129,6 +129,7 @@ public class TranslationComponentProperty {
     map.put("HighByteFirst", MESSAGES.HighByteFirstProperties());
     map.put("Hint", MESSAGES.HintProperties());
     map.put("HomeUrl", MESSAGES.HomeUrlProperties());
+    map.put("IgnoreSslErrors", MESSAGES.IgnoreSslErrorsProperties());
     map.put("Image", MESSAGES.ImageProperties());
     map.put("Interval", MESSAGES.IntervalProperties());
     map.put("Language", MESSAGES.LanguageProperties());
@@ -217,6 +218,12 @@ public class TranslationComponentProperty {
     map.put("UseGPS", MESSAGES.UseGPSProperties());
     map.put("Hour", MESSAGES.HourProperties());
     map.put("Minute", MESSAGES.MinuteProperties());
+    map.put("HasMargins", MESSAGES.HasMarginsProperties());
+
+    // =========== ProximitySensor
+    map.put("MaximumRange", MESSAGES.MaximumRangeProperties());
+    map.put("KeepRunningWhenOnPause", MESSAGES.KeepRunningWhenOnPauseProperties());
+    map.put("ProximityChanged", MESSAGES.ProximityChangedPropertiesProperties());
 
     return map;
   }

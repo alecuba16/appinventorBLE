@@ -117,13 +117,12 @@ public final class SimpleComponentDescriptor {
     bundledImages.put("images/twitter.png", images.twitterComponent());
     bundledImages.put("images/voting.png", images.voting());
     bundledImages.put("images/web.png", images.web());
-    bundledImages.put("images/bluetoothBleScanCallBack.png", images.bluetoothBleScanCallBack());
-    bundledImages.put("images/bluetoothBleCallBack.png", images.bluetoothBleCallBack());
-    bundledImages.put("images/bluetoothble.png", images.bluetoothble());
+    bundledImages.put("images/bluetoothBle.png", images.bluetoothBle());
     bundledImages.put("images/sharing.png", images.sharingComponent());
     bundledImages.put("images/spinner.png", images.spinner());
     bundledImages.put("images/listView.png", images.listview());
     bundledImages.put("images/yandex.png", images.yandex());
+    bundledImages.put("images/proximitysensor.png", images.proximitysensor());
     imagesInitialized = true;
   }
 

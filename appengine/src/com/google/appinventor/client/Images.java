@@ -467,24 +467,10 @@ public interface Images extends Resources {
   @Source("com/google/appinventor/images/procedures.png")
   ImageResource procedures();
   /**
-    * Designer palette item: BluetoothBleScanCallBack
+    * Designer palette item: BluetoothBle
     */
-  @Source("com/google/appinventor/images/bluetoothBleScanCallBack.png")
-  ImageResource bluetoothBleScanCallBack();
-
-
-  /**
-    * Designer palette item: BluetoothBleCallBack
-    */
-  @Source("com/google/appinventor/images/bluetoothBleCallBack.png")
-  ImageResource bluetoothBleCallBack();
-
-
-  /**
-    * Designer palette item: Bluetoothble
-    */
-  @Source("com/google/appinventor/images/bluetoothble.png")
-  ImageResource bluetoothble();
+  @Source("com/google/appinventor/images/bluetoothBle.png")
+  ImageResource bluetoothBle();
 
 
 
@@ -505,5 +491,11 @@ public interface Images extends Resources {
     */
   @Source("com/google/appinventor/images/yandex.png")
   ImageResource yandex();
+
+  /**
+   * Designer palette item: proximitysensor component
+   */
+  @Source("com/google/appinventor/images/proximitysensor.png")
+  ImageResource proximitysensor();
 
 }

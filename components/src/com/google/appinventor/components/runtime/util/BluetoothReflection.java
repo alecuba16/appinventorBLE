@@ -10,10 +10,8 @@ package com.google.appinventor.components.runtime.util;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGattCallback;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
-import android.content.Context;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,22 +53,6 @@ public class BluetoothReflection {
     return invokeStaticMethod(getMethod(bluetoothAdapterClass, "getDefaultAdapter"));
   }
 
-  /**
-   * alecina16 Invokes the method
-   * {@link android.bluetooth.BluetoothDevice#connectGatt(Context context, boolean autoConnect, BluetoothGattCallback callback)}.
-   * @param bluetoothDevice a {@link android.bluetooth.BluetoothDevice} object
-   * @param context the program context
-   * @param autoconnect autoConnect true/false
-   * @param callback class where the callbacks of profile are called
-   * @return a {@link android.bluetooth.BluetoothGatt} object
-   */
-  public static Object connectGatt(Object bluetoothDevice, Context context,boolean autoConnect, BluetoothGattCallback callback)
-      throws IOException {
-    return invokeMethodThrowsIOException(
-        getMethod(bluetoothDevice.getClass(), "connectGatt", Context.class,Boolean.class,BluetoothGattCallback.class),
-        bluetoothDevice, context,autoConnect,callback);
-  }
-  
   /**
    * Invokes the method
    * {@link android.bluetooth.BluetoothAdapter#isEnabled()}.

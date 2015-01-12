@@ -21,9 +21,4 @@ interface BluetoothConnectionListener {
    *
    */
   void beforeDisconnect(BluetoothConnectionBase bluetoothConnection);
-  
-  /**
-   *alecuba16
-   */
- void afterbleScanResult(BluetoothConnectionBase bluetoothConnection);
 }

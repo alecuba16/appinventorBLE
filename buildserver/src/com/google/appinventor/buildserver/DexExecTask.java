@@ -18,9 +18,7 @@ package com.google.appinventor.buildserver;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -161,8 +159,7 @@ public class DexExecTask  {
         // add a hash of the original file path
         try {
             HashFunction hashFunction = Hashing.md5();
-            Path mipath = FileSystems.getDefault().getPath(inputFile.getPath());
-            HashCode hashCode = hashFunction.hashBytes(Files.readAllBytes(mipath));
+            HashCode hashCode = hashFunction.hashBytes(Files.readAllBytes(inputFile.toPath()));
             retval = hashCode.toString();
             alreadyChecked.put(inputFile.getAbsolutePath(), retval);
             return retval;

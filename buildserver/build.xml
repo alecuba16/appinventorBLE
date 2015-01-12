@@ -47,7 +47,7 @@
        the jars needed to compile the build server classes.
        ===================================================================== -->
   <target name="BuildServer"
-          depends="init,CopyToRunLibDir,components_AndroidRuntime,components_ComponentList">
+          depends="StopLocalServers,init,CopyToRunLibDir,components_AndroidRuntime,components_ComponentList">
     <property name="BuildServer-class.dir" location="${class.dir}/BuildServer" />
     <mkdir dir="${BuildServer-class.dir}" />
 
@@ -189,7 +189,7 @@
        RunLocalBuildServer: Runs the build server
        ===================================================================== -->
   <target name="RunLocalBuildServer"
-          depends="BuildServer">
+          depends="StopLocalServers,BuildServer">
       <property environment="env"/>
       <parallel>
 	  <echo message= "Arrancando Web APP server en 8888" />
@@ -201,8 +201,7 @@
         <arg value="--address=0.0.0.0"/>
         <arg value="${basedir}/../appengine/build/war"/>
       </java>
-        <echo message= "Eclipse home: ${basedir}" />
-        <echo message= "Arrancando Build server en 9990" />
+      <echo message= "Arrancando Build server en 9990" />
       <java classname="com.google.appinventor.buildserver.BuildServer" fork="true" failonerror="true">
       <classpath>
         <fileset dir="${run.lib.dir}" includes="*.jar" />
@@ -210,52 +209,51 @@
       <sysproperty key="file.encoding" value="UTF-8" />
       <arg value="--dexCacheDir" />
       <arg value="${public.build.dir}/dexCache" />
-    </java> 
+    </java>
     </parallel>    
   </target> 
   
    <!-- =====================================================================
        StopLocalServers:Stop the build server
        ===================================================================== -->
-<target name="StopLocalServers">
-		   	<property environment="env"/>
-		   	<echo message= "Parando App Engine server" />
-		   	<exec executable="${env.JAVA_HOME}/bin/jps" output="pid.out.file"/>
-		      <loadfile srcfile="pid.out.file" property="pid.out">
-		       <filterchain>
-		           <linecontains>
-					  <contains value="DevAppServerMain"/>
-					</linecontains>
-					<tokenfilter>
-					    <deletecharacters chars="DevAppServerMain"/>
-					    <trim/>
-					    <ignoreblank/>
-					</tokenfilter>
-					<striplinebreaks/>
-		       </filterchain>
-		     </loadfile>  
-		     <echo>Matado proceso App Engine Server con PID - "${pid.out}"</echo>
+  <target name="StopLocalServers">
+	<property environment="env"/>
+	<echo message= "Parando App Engine server" />
+	<exec executable="${env.JAVA_HOME}/bin/jps" output="pid.out.file"/>
+	<loadfile srcfile="pid.out.file" property="pid.out">
+		<filterchain>
+			<linecontains>
+				<contains value="DevAppServerMain"/>
+			</linecontains>
+			<tokenfilter>
+				<deletecharacters chars="DevAppServerMain"/>
+				<trim/>
+				<ignoreblank/>
+			</tokenfilter>
+			<striplinebreaks/>
+		</filterchain>
+	</loadfile>  
+	<echo>Matado proceso App Engine Server con PID - "${pid.out}"</echo>
 			<exec executable="taskkill" osfamily="winnt">
 		    	<arg value="/F"/>
 		    	<arg value="/PID"/>
-		    	<arg value="${pid.out}"/>
+				<arg value="${pid.out}"/>
 			</exec>
 		  	<exec executable="kill" osfamily="unix">
 		    	<arg value="-9"/>
-		    	<arg value="${pid.out}"/>
+				<arg value="${pid.out}"/>
 		  	</exec>
-		  	<delete file="pid.out.file"/>		  	
+			<delete file="pid.out.file"/>
 		  	<echo message= "Parado App engine server!" />
-
 		    <echo message= "Parando BuildServer engine server.." />
 			<exec executable="${env.JAVA_HOME}/bin/jps" output="pid.out.file"/>
-		      <loadfile srcfile="pid.out.file" property="pid.out">
-		       <filterchain>
-		           <linecontains>
-					  <contains value="BuildServer"/>
-					</linecontains>
-					<tokenfilter>
-					    <deletecharacters chars="BuildServer"/>
+				<loadfile srcfile="pid.out.file" property="pid.out">
+					<filterchain>
+						<linecontains>
+					  		<contains value="BuildServer"/>
+						</linecontains>
+						<tokenfilter>
+						<deletecharacters chars="BuildServer"/>
 					    <trim/>
 					    <ignoreblank/>
 					</tokenfilter>
@@ -276,6 +274,7 @@
 		  	<echo message= "Parado BuildServer" />
     </target> 
     
+
   <!-- =====================================================================
        RunMain:
        Use a command like the following to build a single APK from a ZIP:

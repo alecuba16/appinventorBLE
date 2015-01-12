@@ -18,9 +18,6 @@ import com.google.appinventor.components.runtime.util.ErrorMessages;
 import com.google.appinventor.components.runtime.util.SdkLevel;
 import com.google.appinventor.components.runtime.util.YailList;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.pm.PackageManager;
 import android.util.Log;
 
 import java.io.BufferedInputStream;
@@ -113,34 +110,6 @@ public abstract class BluetoothConnectionBase extends AndroidNonvisibleComponent
     for (BluetoothConnectionListener listener : bluetoothConnectionListeners) {
       listener.beforeDisconnect(this);
     }
-  }
-  private transient final MLeScanCallBack scanCallBack = new MLeScanCallBack();
-  public class MLeScanCallBack implements BluetoothAdapter.LeScanCallback {
-    
-    @Override
-    public void onLeScan(final BluetoothDevice device,final int rssi,
-    final byte[] scanRecord) {
-    //List<String> unresultado=new ArrayList<String>();
-    //unresultado.add(device.getName());
-    //unresultado.add(device.getAddress());
-    //unresultado.add(Integer.toString(rssi));
-    //BluetoothConnectionBase.this.bleScanResult.add(unresultado);
-   bleScanResult.add(device.getName());
-    Log.d(logTag, "onLeScan() - encontrado=" + device + ", rssi=" + rssi + " ,nombre:"+device.getName());
-    //fireafterbleScanResult();
-   }
-  }
-  
-  private YailList bleScanResult = new YailList(); ;
-  
-  /**
-   * get the last scan result
-   *
-   * @return bleScanResult bleScanResult
-   */
-  @SimpleProperty(description = "get the last scan result")
-  public YailList getBleScanResult() {
-   return bleScanResult;
   }
 
   /**
