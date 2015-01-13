@@ -21,6 +21,7 @@ import android.util.Log;
     nonVisible = true,
     iconName = "images/bluetoothBleScanCallBack.png")
 @SimpleObject
+
 public final class BluetoothBleScanCallBack extends BluetoothBle implements LeScanCallback {
   
   

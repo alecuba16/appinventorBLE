@@ -800,6 +800,11 @@ public class YaVersion {
   // - Initial version.
   public static final int SLIDER_COMPONENT_VERSION = 1;
 
+
+  // For BLUETOOTHBLECLIENT_COMPONENT_VERSION 1:
+  // - Initial Version.
+  public static final int BLUETOOTHBLECLIENT_COMPONENT_VERSION = 1;
+
   // For BLUETOOTHBLECALLBACK_COMPONENT_VERSION 1:
   // - Initial Version.
   public static final int BLUETOOTHBLECALLBACK_COMPONENT_VERSION = 1;

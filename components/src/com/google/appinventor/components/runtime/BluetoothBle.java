@@ -5,27 +5,19 @@
 
 package com.google.appinventor.components.runtime;
 
-import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import com.google.appinventor.components.annotations.DesignerComponent;
-import com.google.appinventor.components.annotations.DesignerProperty;
 import com.google.appinventor.components.annotations.PropertyCategory;
 import com.google.appinventor.components.annotations.SimpleFunction;
 import com.google.appinventor.components.annotations.SimpleObject;
 import com.google.appinventor.components.annotations.SimpleProperty;
-import com.google.appinventor.components.common.ComponentCategory;
-import com.google.appinventor.components.common.PropertyTypeConstants;
-import com.google.appinventor.components.common.YaVersion;
-import com.google.appinventor.components.runtime.errors.YailRuntimeError;
+import com.google.appinventor.components.annotations.UsesPermissions;
 import com.google.appinventor.components.runtime.util.BluetoothReflection;
 import com.google.appinventor.components.runtime.util.ErrorMessages;
-import com.google.appinventor.components.runtime.util.TextViewUtil;
-
+import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGatt;
 import android.bluetooth.BluetoothGattCharacteristic;
@@ -33,8 +25,6 @@ import android.bluetooth.BluetoothGattDescriptor;
 import android.bluetooth.BluetoothGattService;
 import android.content.pm.PackageManager;
 import android.util.Log;
-import android.view.View;
-import android.widget.TextView;
 
 
 /**
@@ -43,6 +33,9 @@ import android.widget.TextView;
  * @author alecuba16@gmail.com (Alejandro Blanco Martinez)
  */
 @SimpleObject
+@UsesPermissions(permissionNames =
+"android.permission.BLUETOOTH, " +
+"android.permission.BLUETOOTH_ADMIN")
 public abstract class BluetoothBle  extends AndroidNonvisibleComponent
 implements Component, OnDestroyListener, Deleteable {
   
@@ -64,6 +57,7 @@ implements Component, OnDestroyListener, Deleteable {
    */
   protected BluetoothBle(ComponentContainer container, String logTag) {
     this(container.$form(), logTag);
+    this.container=container;
     form.registerForOnDestroy(this);
   }
   
@@ -227,9 +221,35 @@ implements Component, OnDestroyListener, Deleteable {
         }
       }
     }
-
     return addressesAndNames;
   }
+  
+  /**
+   * Checks if the Bluetooth device is scanning.
+   *
+   * @return true if the device is scanning, false otherwise
+   */
+  @SimpleFunction(description = "Checks if the Bluetooth device is scanning")
+  public boolean isDiscovering() {
+    boolean scanning=false;
+    BluetoothAdapter bluetoothAdapter =(BluetoothAdapter) BluetoothReflection.getBluetoothAdapter();
+    if (bluetoothAdapter == null) return false;
+    return   bluetoothAdapter.isDiscovering();
+  }
+  
+  
+  /**
+   * startLeScan.
+   * @param scanCallBack scanCallBack component
+   * @return true if the scan command processed succsesfully, false otherwise
+   */
+  @SimpleFunction(description = "startLeScan")
+  public boolean startLeScan(BluetoothBleScanCallBack scanCallBack) {
+    BluetoothAdapter bluetoothAdapter =(BluetoothAdapter) BluetoothReflection.getBluetoothAdapter();
+    if (bluetoothAdapter == null) return false;
+    return bluetoothAdapter.startLeScan(scanCallBack);
+  }
+  
  
   /**
    * alecuba16
@@ -368,12 +388,14 @@ implements Component, OnDestroyListener, Deleteable {
     boolean supports = false;
     Object bluetoothAdapter = BluetoothReflection.getBluetoothAdapter();
     if (bluetoothAdapter != null) {
-      if (container.$context()
-          .getPackageManager()
-          .hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-        supports = true;
-      }
-    }
+      if (container.$context()!=null){
+        if(container.$context().getPackageManager()!=null){
+          if(container.$context().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+              supports = true;
+              }
+        }else{Log.d(logTag,"container.$context().getPackageManager() null");}
+        }else{Log.d(logTag,"container.$context(). null");}
+      }else{Log.d(logTag,"container.$context() null");}
     return supports;
   }
   protected BluetoothClient bluetooth;

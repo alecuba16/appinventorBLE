@@ -118,6 +118,7 @@ public final class SimpleComponentDescriptor {
     bundledImages.put("images/twitter.png", images.twitterComponent());
     bundledImages.put("images/voting.png", images.voting());
     bundledImages.put("images/web.png", images.web());
+    bundledImages.put("images/bluetoothBleClient.png", images.bluetoothBleClient());
     bundledImages.put("images/bluetoothBleCallBack.png", images.bluetoothBleCallBack());
     bundledImages.put("images/bluetoothBleScanCallBack.png", images.bluetoothBleScanCallBack());
     bundledImages.put("images/bluetoothBle.png", images.bluetoothBle());
