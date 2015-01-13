@@ -108,17 +108,6 @@ public abstract class BluetoothConnectionBase extends AndroidNonvisibleComponent
       listener.beforeDisconnect(this);
     }
   }
-  
-  public void fireAfterBleScanResult() {
-    for (BluetoothConnectionListener listener : bluetoothConnectionListeners) {
-      listener.afterBleScanResult(this);
-    }
-  }
-  
-  
-  public void scan(){
-    BluetoothBleScanCallBack;
-  }
 
   /**
    * Default Initialize

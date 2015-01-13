@@ -17,6 +17,10 @@ import com.google.appinventor.components.common.YaVersion;
 import com.google.appinventor.components.runtime.errors.YailRuntimeError;
 
 
+
+
+import android.bluetooth.BluetoothAdapter.LeScanCallback;
+import android.bluetooth.BluetoothDevice;
 import android.view.View;
 
 @DesignerComponent(version = YaVersion.BLUETOOTHBLECALLBACK_COMPONENT_VERSION,
@@ -25,7 +29,7 @@ import android.view.View;
     nonVisible = true,
     iconName = "images/bluetoothBleCallBack.png")
 @SimpleObject
-public final class BluetoothBleCallBack extends AndroidNonvisibleComponent {
+public final class BluetoothBleCallBack extends BluetoothBle implements LeScanCallback {
 
   /**
    * Creates a new component.
@@ -33,7 +37,13 @@ public final class BluetoothBleCallBack extends AndroidNonvisibleComponent {
    * @param container  container, component will be placed in
    */
   public BluetoothBleCallBack(ComponentContainer container) {
-    super(container.$form());
+    super(container,"BluetoothBleCallBack");
+  }
+
+  @Override
+  public void onLeScan(BluetoothDevice arg0, int arg1, byte[] arg2) {
+    // TODO Auto-generated method stub
+    
   }
 
 }

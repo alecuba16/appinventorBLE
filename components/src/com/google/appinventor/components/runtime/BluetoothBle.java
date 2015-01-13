@@ -5,6 +5,7 @@
 
 package com.google.appinventor.components.runtime;
 
+import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -36,13 +37,20 @@ import android.view.View;
 import android.widget.TextView;
 
 
-@DesignerComponent(version = YaVersion.BLUETOOTHBLE_COMPONENT_VERSION,
-    description = "A new component ",
-    category = ComponentCategory.CONNECTIVITY,
-    nonVisible = true,
-    iconName = "images/bluetoothBle.png")
+/**
+ * An abstract base class for the Bluetooth BLE.
+ *
+ * @author alecuba16@gmail.com (Alejandro Blanco Martinez)
+ */
 @SimpleObject
-public final class BluetoothBle  extends BluetoothConnectionBase implements BluetoothConnectionListener {
+public abstract class BluetoothBle  extends AndroidNonvisibleComponent
+implements Component, OnDestroyListener, Deleteable {
+  
+  protected final String logTag;
+  private final List<BluetoothBleConnectionListener> bluetoothConnectionListeners =
+      new ArrayList<BluetoothBleConnectionListener>();  
+  
+  
   private static UUID UUID_SERVICIO = UUID.fromString("0000180d-0000-1000-8000-00805f9b34fb");
   private static UUID UUID_CARACT = UUID.fromString("00002a37-0000-1000-8000-00805f9b34fb");
   private static UUID UUID_CONFIG_DESC = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
@@ -50,14 +58,70 @@ public final class BluetoothBle  extends BluetoothConnectionBase implements Blue
   private ComponentContainer container;
   private final List<Component> attachedComponents = new ArrayList<Component>();
   private Set<Integer> acceptableDeviceClasses;
-
+  
   /**
    * Creates a new BluetoothBle.
    */
-  public BluetoothBle(ComponentContainer container) {
-    super(container, "BluetoothBle");
-    this.container = container;
+  protected BluetoothBle(ComponentContainer container, String logTag) {
+    this(container.$form(), logTag);
+    form.registerForOnDestroy(this);
   }
+  
+  private BluetoothBle(Form form, String logTag) {
+    super(form);
+    this.logTag = logTag;
+  }
+  
+  
+  /**
+   * Adds a {@link BluetoothBleConnectionListener} to the listener list.
+   *
+   * @param listener  the {@code BluetoothBleConnectionListener} to be added
+   */
+  void addBluetoothConnectionListener(BluetoothBleConnectionListener listener) {
+    bluetoothConnectionListeners.add(listener);
+  }
+
+  /**
+   * Removes a {@link BluetoothBleConnectionListener} from the listener list.
+   *
+   * @param listener  the {@code BluetoothBleConnectionListener} to be removed
+   */
+  void removeBluetoothConnectionListener(BluetoothConnectionListener listener) {
+    bluetoothConnectionListeners.remove(listener);
+  }
+
+  private void fireAfterConnectEvent() {
+    for (BluetoothBleConnectionListener listener : bluetoothConnectionListeners) {
+      listener.afterConnect(this);
+    }
+  }
+
+  private void fireBeforeDisconnectEvent() {
+    for (BluetoothBleConnectionListener listener : bluetoothConnectionListeners) {
+      listener.beforeDisconnect(this);
+    }
+  }
+  
+  public void fireAfterBleScanResult() {
+    for (BluetoothBleConnectionListener listener : bluetoothConnectionListeners) {
+      listener.afterBleScanResult(this);
+    }
+  }
+  
+//OnDestroyListener implementation
+
+ @Override
+ public void onDestroy() {
+   //TODO Disconnect here
+ }
+
+ // Deleteable implementation
+
+ @Override
+ public void onDelete() {
+   //TODO Disconnect here
+ }
   
   boolean attachComponent(Component component, Set<Integer> acceptableDeviceClasses) {
     if (attachedComponents.isEmpty()) {
@@ -266,7 +330,7 @@ public final class BluetoothBle  extends BluetoothConnectionBase implements Blue
     UUID_CARACT = characteristicuuid;
     UUID_CONFIG_DESC = descriptoruuid;
 
-    Disconnect();
+    //TODO Disconnect here
 
     //connect(bluetoothDevice);
     return true;
@@ -364,24 +428,4 @@ public final class BluetoothBle  extends BluetoothConnectionBase implements Blue
     }
 
   }
-
-  @Override
-  public void afterConnect(BluetoothConnectionBase bluetoothConnection) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void beforeDisconnect(BluetoothConnectionBase bluetoothConnection) {
-    // TODO Auto-generated method stub
-    
-  }
-
-  @Override
-  public void afterBleScanResult(BluetoothConnectionBase bluetoothConnection) {
-    // TODO Auto-generated method stub
-    
-  }
-  
-
 }
