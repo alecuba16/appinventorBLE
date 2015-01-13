@@ -466,6 +466,21 @@ public interface Images extends Resources {
    */
   @Source("com/google/appinventor/images/procedures.png")
   ImageResource procedures();
+  
+  /**
+    * Designer palette item: BluetoothBleCallBack
+    */
+  @Source("com/google/appinventor/images/bluetoothBleCallBack.png")
+  ImageResource bluetoothBleCallBack();
+
+
+  /**
+    * Designer palette item: BluetoothBleScanCallBack
+    */
+  @Source("com/google/appinventor/images/bluetoothBleScanCallBack.png")
+  ImageResource bluetoothBleScanCallBack();
+
+
   /**
     * Designer palette item: BluetoothBle
     */

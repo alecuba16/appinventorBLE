@@ -219,8 +219,8 @@
   <target name="StopLocalServers">
 	<property environment="env"/>
 	<echo message= "Parando App Engine server" />
-	<exec executable="${env.JAVA_HOME}/bin/jps" output="pid.out.file"/>
-	<loadfile srcfile="pid.out.file" property="pid.out">
+	<exec executable="${env.JAVA_HOME}/bin/jps" output="pid1.out.file"/>
+	<loadfile srcfile="pid1.out.file" property="pid1.out">
 		<filterchain>
 			<linecontains>
 				<contains value="DevAppServerMain"/>
@@ -233,45 +233,45 @@
 			<striplinebreaks/>
 		</filterchain>
 	</loadfile>  
-	<echo>Matado proceso App Engine Server con PID - "${pid.out}"</echo>
-			<exec executable="taskkill" osfamily="winnt">
-		    	<arg value="/F"/>
-		    	<arg value="/PID"/>
-				<arg value="${pid.out}"/>
-			</exec>
-		  	<exec executable="kill" osfamily="unix">
-		    	<arg value="-9"/>
-				<arg value="${pid.out}"/>
-		  	</exec>
-			<delete file="pid.out.file"/>
-		  	<echo message= "Parado App engine server!" />
-		    <echo message= "Parando BuildServer engine server.." />
-			<exec executable="${env.JAVA_HOME}/bin/jps" output="pid.out.file"/>
-				<loadfile srcfile="pid.out.file" property="pid.out">
-					<filterchain>
-						<linecontains>
-					  		<contains value="BuildServer"/>
-						</linecontains>
-						<tokenfilter>
-						<deletecharacters chars="BuildServer"/>
-					    <trim/>
-					    <ignoreblank/>
-					</tokenfilter>
-					<striplinebreaks/>
-		       </filterchain>
-		     </loadfile>  
-		     <echo>Matado proceso BuildServer con PID - "${pid.out}"</echo>
-			<exec executable="taskkill" osfamily="winnt">
-		    	<arg value="/F"/>
-		    	<arg value="/PID"/>
-		    	<arg value="${pid.out}"/>
-			</exec>
-		  	<exec executable="kill" osfamily="unix">
-		    	<arg value="-9"/>
-		    	<arg value="${pid.out}"/>
-		  	</exec>
-		  	<delete file="pid.out.file"/>
-		  	<echo message= "Parado BuildServer" />
+	<echo>Matado proceso App Engine Server con PID - "${pid1.out}"</echo>
+	<exec executable="taskkill" osfamily="winnt">
+    	<arg value="/F"/>
+    	<arg value="/PID"/>
+		<arg value="${pid1.out}"/>
+	</exec>
+  	<exec executable="kill" osfamily="unix">
+    	<arg value="-9"/>
+		<arg value="${pid1.out}"/>
+  	</exec>
+	<delete file="pid1.out.file"/>
+  	<echo message= "Parado App engine server!" />
+    <echo message= "Parando BuildServer engine server.." />
+	<exec executable="${env.JAVA_HOME}/bin/jps" output="pid2.out.file"/>
+		<loadfile srcfile="pid2.out.file" property="pid2.out">
+			<filterchain>
+				<linecontains>
+			  		<contains value="BuildServer"/>
+				</linecontains>
+				<tokenfilter>
+				<deletecharacters chars="BuildServer"/>
+			    <trim/>
+			    <ignoreblank/>
+			</tokenfilter>
+			<striplinebreaks/>
+       </filterchain>
+     </loadfile>  
+     <echo>Matado proceso BuildServer con PID - "${pid2.out}"</echo>
+	<exec executable="taskkill" osfamily="winnt">
+    	<arg value="/F"/>
+    	<arg value="/PID"/>
+    	<arg value="${pid2.out}"/>
+	</exec>
+  	<exec executable="kill" osfamily="unix">
+    	<arg value="-9"/>
+    	<arg value="${pid2.out}"/>
+  	</exec>
+  	<delete file="pid2.out.file"/>
+  	<echo message= "Parado BuildServer" />
     </target> 
     
 

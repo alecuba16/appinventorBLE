@@ -21,4 +21,10 @@ interface BluetoothConnectionListener {
    *
    */
   void beforeDisconnect(BluetoothConnectionBase bluetoothConnection);
+  
+  
+  /**
+   * 
+   */
+  void afterBleScanResult(BluetoothConnectionBase bluetoothConnection);
 }

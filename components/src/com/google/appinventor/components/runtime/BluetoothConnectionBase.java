@@ -15,11 +15,8 @@ import com.google.appinventor.components.annotations.SimpleProperty;
 import com.google.appinventor.components.common.PropertyTypeConstants;
 import com.google.appinventor.components.runtime.util.BluetoothReflection;
 import com.google.appinventor.components.runtime.util.ErrorMessages;
-import com.google.appinventor.components.runtime.util.SdkLevel;
 import com.google.appinventor.components.runtime.util.YailList;
-
 import android.util.Log;
-
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
@@ -110,6 +107,17 @@ public abstract class BluetoothConnectionBase extends AndroidNonvisibleComponent
     for (BluetoothConnectionListener listener : bluetoothConnectionListeners) {
       listener.beforeDisconnect(this);
     }
+  }
+  
+  public void fireAfterBleScanResult() {
+    for (BluetoothConnectionListener listener : bluetoothConnectionListeners) {
+      listener.afterBleScanResult(this);
+    }
+  }
+  
+  
+  public void scan(){
+    BluetoothBleScanCallBack;
   }
 
   /**

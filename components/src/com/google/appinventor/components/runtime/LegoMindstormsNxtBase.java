@@ -536,4 +536,10 @@ public class LegoMindstormsNxtBase extends AndroidNonvisibleComponent
       bluetooth = null;
     }
   }
+
+  @Override
+  public void afterBleScanResult(BluetoothConnectionBase bluetoothConnection) {
+    // TODO Auto-generated method stub
+    
+  }
 }
