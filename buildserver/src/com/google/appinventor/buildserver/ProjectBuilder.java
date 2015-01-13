@@ -237,6 +237,7 @@ public final class ProjectBuilder {
     return compSet;
   }
 
+  @SuppressWarnings("deprecation")
   private ArrayList<String> extractProjectFiles(ZipFile inputZip, File projectRoot)
       throws IOException {
     ArrayList<String> projectFileNames = Lists.newArrayList();
