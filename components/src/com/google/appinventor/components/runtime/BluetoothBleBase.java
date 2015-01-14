@@ -169,5 +169,150 @@ implements Component, OnDestroyListener, Deleteable {
     return   bluetoothAdapter.isDiscovering();
   }
     
+  BluetoothBleScanCallBack scanCallBack = new BluetoothBleScanCallBack();
   
+  public final class BluetoothBleScanCallBack implements LeScanCallback {
+    
+      @Override
+      public void onLeScan(final BluetoothDevice device,final int rssi,
+      final byte[] scanRecord) {
+      Log.d("BluetoothBleScanCallBack", "onLeScan() - encontrado=" + device + ", rssi=" + rssi + " ,nombre:"+device.getName());
+      fireAfterBleScanResult(device);
+     }
+  }
+   
+  BluetoothGattCallback gattCallBack = new GattCallBack();
+  
+  public class GattCallBack extends BluetoothGattCallback {
+    private transient final String TAG = GattCallBack.class.getSimpleName();
+ 
+    public GattCallBack(){
+      super();
+    }
+    
+   @Override
+   public void onConnectionStateChange(final BluetoothGatt gatt, final int status, final int newState) {
+     Log.d(TAG, "onConnectionStateChange ("
+         + gatt.getDevice().getAddress() + ") newstate=" + newState);
+     switch(newState){
+       case BluetoothProfile.STATE_CONNECTING://Conectando
+         Log.d(TAG,"onConnectionStateChange ->conectando");
+         break;
+       case BluetoothProfile.STATE_CONNECTED://Conectado
+         fireAfterConnectEvent();
+         gatt.discoverServices();
+         break;
+       case BluetoothProfile.STATE_DISCONNECTING://Desconectando
+         break;
+       case BluetoothProfile.STATE_DISCONNECTED://Desconectado
+         break;
+       default:
+           break;
+     }
+   }
+
+   @Override
+   public void onServicesDiscovered(final BluetoothGatt gatt, final int status) {
+     final StringBuilder serviciostxt = new StringBuilder();
+     serviciostxt.append("onServicesDiscovered->Status: " + status);
+     if (status == BluetoothGatt.GATT_SUCCESS) {
+       serviciostxt.append("\nonServicesDiscovered->GATT success status: " + status);
+       final Iterator<BluetoothGattService> todosLosServicios = gatt
+           .getServices().iterator();
+       BluetoothGattService serviciotemp;
+       while (todosLosServicios.hasNext()) {
+         serviciotemp = todosLosServicios.next();
+         //if (serviciotemp.getUuid().equals(Constantes.UUID_SERVICIO)) {
+         //  serviciostxt.append("\nHe encontrado el com.leitat.servicio");
+          // servicio.habilitarNotificaciones(gatt.getDevice());
+        // }
+         serviciostxt.append(serviciotemp.getUuid()+",");
+       }
+     } else {
+       serviciostxt.append(" error en el status no es success");
+     }
+     Log.d(TAG, serviciostxt.toString());
+   }
+
+
+   @Override
+   public void onDescriptorWrite(final BluetoothGatt gatt,
+       final BluetoothGattDescriptor descriptor, final int status) {
+     Log.d(TAG, "onDescriptorWrite Servicio:"
+         + descriptor.getCharacteristic().getService().getUuid()
+         + " Caracteristica:"
+         + descriptor.getCharacteristic().getUuid() + " Descriptor:"
+         + descriptor.getUuid() + " status:" + status);
+   }
+   
+ 
+   
+   @Override
+   public void onCharacteristicChanged(final BluetoothGatt gatt,
+       final BluetoothGattCharacteristic characteristic) {
+     Log.d(TAG,
+         "onCharacteristicChanged - ha cambiado una caracteristica");
+     final StringBuilder mensaje_debug = new StringBuilder();
+     mensaje_debug.append("caracteristicaActualizada -");
+     
+     final UUID charUuid = characteristic.getUuid();
+
+     //if (!charUuid.equals(Constantes.UUID_CONFIG_DESC)) {
+     //    final GestorDatos GestorDatos=new GestorDatos(servicio);
+     //    final Bundle mBundle=GestorDatos.tramaAGui(characteristic.getValue());
+     //    servicio.mensajeAprincipal(Constantes.ID_VALOR, mBundle);
+    // }
+
+     mensaje_debug.append(" Campos ");
+     for (int i = 1; i < 8; i++) {
+       mensaje_debug.append(" campo(");
+       mensaje_debug.append(i);
+       mensaje_debug.append("):");
+       mensaje_debug.append(characteristic.getIntValue(
+           BluetoothGattCharacteristic.FORMAT_UINT8, i));
+     }
+     Log.d(TAG, mensaje_debug.toString());
+   }
+
+
+}
+
+ 
+
+ 
+  private boolean isDeviceClassAcceptable(Object bluetoothDevice) {
+    if (acceptableDeviceClasses == null) {
+      // Add devices are acceptable.
+      return true;
+    }
+
+    Object bluetoothClass = BluetoothReflection.getBluetoothClass(bluetoothDevice);
+    if (bluetoothClass == null) {
+      // This device has no class.
+      return false;
+    }
+
+    int deviceClass = BluetoothReflection.getDeviceClass(bluetoothClass);
+    return acceptableDeviceClasses.contains(deviceClass);
+  }
+
+  @SimpleFunction(description = "Checks if the current device supports bluetooth 4.0 LE")
+  public boolean IsBluetoothBLE() {
+    boolean supports = false;
+    Object bluetoothAdapter = BluetoothReflection.getBluetoothAdapter();
+    if (bluetoothAdapter != null) {
+      if (container.$context()!=null){
+        if(container.$context().getPackageManager()!=null){
+          if(container.$context().getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
+              supports = true;
+              }
+        }else{Log.d(logTag,"container.$context().getPackageManager() null");}
+        }else{Log.d(logTag,"container.$context(). null");}
+      }else{Log.d(logTag,"container.$context() null");}
+    return supports;
+  } 
+  
+  public void discoverServices(BluetoothGatt bluetoothGatt){
+    bluetoothGatt.discoverServices();
+  }
 }

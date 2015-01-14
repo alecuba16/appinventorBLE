@@ -176,8 +176,7 @@ public boolean scanDevices(){
   if(!isDiscovering()){
     BluetoothAdapter bluetoothAdapter =(BluetoothAdapter) BluetoothReflection.getBluetoothAdapter();
     if (bluetoothAdapter == null) return false;
-    return false;
-    //return bluetoothAdapter.startLeScan(scanCallBack);
+    return bluetoothAdapter.startLeScan(scanCallBack);
   }else  return false; 
 }
       
@@ -216,4 +215,6 @@ public boolean scanDevices(){
     }
     return encontrado;
   }
+  
+
 }
