@@ -184,8 +184,7 @@
       <arg line='install "${public.build.dir}/MIT AI2 Companion.apk"' />
     </exec>
   </target>
-
-  <!-- =====================================================================
+ <!-- =====================================================================
        RunLocalBuildServer: Runs the build server
        ===================================================================== -->
   <target name="RunLocalBuildServer"
@@ -196,20 +195,22 @@
   	  <java classname="com.google.appengine.tools.KickStart" fork="true" failonerror="true"
         dir="${basedir}/../lib/appengine/appengine-java-sdk-1.9.17"
         classpath="${basedir}/../lib/appengine/appengine-java-sdk-1.9.17/lib/appengine-tools-api.jar">
+        <jvmarg value="-Djava.net.preferIPv4Stack=true"/>
         <arg value="com.google.appengine.tools.development.DevAppServerMain"/>
         <arg value="--port=8888"/>
         <arg value="--address=0.0.0.0"/>
         <arg value="${basedir}/../appengine/build/war"/>
-      </java>
+      </java> 
       <echo message= "Arrancando Build server en 9990" />
       <java classname="com.google.appinventor.buildserver.BuildServer" fork="true" failonerror="true">
-      <classpath>
-        <fileset dir="${run.lib.dir}" includes="*.jar" />
-      </classpath>
-      <sysproperty key="file.encoding" value="UTF-8" />
-      <arg value="--dexCacheDir" />
-      <arg value="${public.build.dir}/dexCache" />
-    </java>
+	      <classpath>
+	        <fileset dir="${run.lib.dir}" includes="*.jar" />
+	      </classpath>
+	      <sysproperty key="file.encoding" value="UTF-8" />
+	      <jvmarg value="-Djava.net.preferIPv4Stack=true"/>
+	      <arg value="--dexCacheDir" />
+      	  <arg value="${public.build.dir}/dexCache" />
+      </java>
     </parallel>    
   </target> 
   
@@ -235,7 +236,7 @@
 	</loadfile>
 	<if>
 	    <and>
-	    <isset property="${pid1.out}"/>
+	    <isset property="pid1.out"/>
 	    <not><equals arg1="${pid1.out}" arg2="" /></not>
 	    </and>
 	    <then>
@@ -249,14 +250,13 @@
 		    	<arg value="-9"/>
 				<arg value="${pid1.out}"/>
 		  	</exec>
-			<delete file="pid1.out.file"/>
 		  	<echo message= "Parado App engine server!" />
  		</then>
  		<else>
    			<echo message="El App engine ya estaba parado" />
  		</else>
 	</if>
-	
+	<delete file="pid1.out.file"/>
     <echo message= "Parando BuildServer engine server.." />
 	<exec executable="jps" output="pid2.out.file"/>
 		<loadfile srcfile="pid2.out.file" property="pid2.out">
@@ -274,7 +274,7 @@
      </loadfile>
      <if>
         <and>
-        <isset property="${pid2.out}"/>
+        <isset property="pid2.out"/>
 	    <not><equals arg1="${pid2.out}" arg2="" /></not>
 	    </and>
 	    <then>
@@ -288,13 +288,13 @@
 		    	<arg value="-9"/>
 		    	<arg value="${pid2.out}"/>
 		  	</exec>
-		  	<delete file="pid2.out.file"/>
 		  	<echo message= "Parado BuildServer" />
  		</then>
  		<else>
    			<echo message="El BuildServer ya estaba parado" />
  		</else>
-	</if>     
+	</if>
+	<delete file="pid2.out.file"/>   
     </target> 
     
 

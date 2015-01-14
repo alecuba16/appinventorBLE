@@ -13,21 +13,21 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.InlineLabel;
 
 /**
- * BluetoothBle component.
+ * BluetoothBleBase component.
  *
  * @author email@example.com (First Last)
  */
-public final class MockBluetoothBle extends MockVisibleComponent{
+public final class MockBluetoothBleBase extends MockVisibleComponent{
 
 /**
  * Component type name.
  */
-public static final String TYPE = "BluetoothBle";
+public static final String TYPE = "BluetoothBleBase";
 private static final int DEFAULT_WIDTH = 100;
 
 
 /**
- * Creates a new MockBluetoothBle component.
+ * Creates a new MockBluetoothBleBase component.
  *
  * @param editor  editor of source file the component belongs to
  */
@@ -37,17 +37,17 @@ private static final int DEFAULT_WIDTH = 100;
 
 
  /**
-  * Creates a new MockBluetoothBle component.
+  * Creates a new MockBluetoothBleBase component.
   *
   * @param editor editor of source file the component belongs to
   */
- public MockBluetoothBle(SimpleEditor editor) {
-   super(editor, TYPE, images.bluetoothBle());
+ public MockBluetoothBleBase(SimpleEditor editor) {
+   super(editor, TYPE, images.bluetoothBleBase());
 
    // Initialize mock label UI
    labelWidget = new InlineLabel();
    labelWidget.setStylePrimaryName("ode-SimpleMockComponent");
-   labelWidget.setText("your new BluetoothBle");
+   labelWidget.setText("your new BluetoothBleBase");
    initComponent(labelWidget);
    refreshForm();
  }

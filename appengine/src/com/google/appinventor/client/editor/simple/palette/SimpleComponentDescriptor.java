@@ -36,7 +36,7 @@ import com.google.appinventor.client.editor.simple.components.MockTextBox;
 import com.google.appinventor.client.editor.simple.components.MockVerticalArrangement;
 import com.google.appinventor.client.editor.simple.components.MockVideoPlayer;
 import com.google.appinventor.client.editor.simple.components.MockWebViewer;
-import com.google.appinventor.client.editor.simple.components.MockBluetoothBle;
+import com.google.appinventor.client.editor.simple.components.MockBluetoothBleBase;
 import com.google.appinventor.client.editor.simple.components.MockSpinner;
 import com.google.common.collect.Maps;
 import com.google.gwt.resources.client.ImageResource;
@@ -119,9 +119,7 @@ public final class SimpleComponentDescriptor {
     bundledImages.put("images/voting.png", images.voting());
     bundledImages.put("images/web.png", images.web());
     bundledImages.put("images/bluetoothBleClient.png", images.bluetoothBleClient());
-    bundledImages.put("images/bluetoothBleCallBack.png", images.bluetoothBleCallBack());
-    bundledImages.put("images/bluetoothBleScanCallBack.png", images.bluetoothBleScanCallBack());
-    bundledImages.put("images/bluetoothBle.png", images.bluetoothBle());
+    bundledImages.put("images/bluetoothBleBase.png", images.bluetoothBleBase());
     bundledImages.put("images/sharing.png", images.sharingComponent());
     bundledImages.put("images/spinner.png", images.spinner());
     bundledImages.put("images/listView.png", images.listview());
@@ -312,8 +310,8 @@ public final class SimpleComponentDescriptor {
       return new MockVideoPlayer(editor);
     } else if (name.equals(MockWebViewer.TYPE)) {
       return new MockWebViewer(editor);
-    } else if (name.equals(MockBluetoothBle.TYPE)) {
-      return new MockBluetoothBle(editor);
+    } else if (name.equals(MockBluetoothBleBase.TYPE)) {
+      return new MockBluetoothBleBase(editor);
     } else if (name.equals(MockSpinner.TYPE)) {
       return new MockSpinner(editor);
     } else {
