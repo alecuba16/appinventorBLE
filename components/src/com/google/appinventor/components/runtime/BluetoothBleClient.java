@@ -166,25 +166,35 @@ public final class BluetoothBleClient extends BluetoothBleBase implements Blueto
 
  
   
-/**
- * scanDevices.
- * @param scanCallBack scanCallBack component
- * @return true if scan is started,false otherwise.
- */
-@SimpleFunction(description = "scanDevices")
-public boolean scanDevices(){
-  addBluetoothConnectionListener(this);
-  if(!isDiscovering()){
-    BluetoothAdapter bluetoothAdapter =(BluetoothAdapter) BluetoothReflection.getBluetoothAdapter();
-    if (bluetoothAdapter == null) return false;
-    return bluetoothAdapter.startLeScan(scanCallBack);
-  }else  return false; 
-}
+  /**
+   * scanDevices.
+   * @param scanCallBack scanCallBack component
+   * @return true if scan is started,false otherwise.
+   */
+  @SimpleFunction(description = "scanDevices")
+  public boolean scanDevices(){
+    addBluetoothConnectionListener(this);
+    if(!isDiscovering()){
+      BluetoothAdapter bluetoothAdapter =(BluetoothAdapter) BluetoothReflection.getBluetoothAdapter();
+      if (bluetoothAdapter == null) return false;
+      return bluetoothAdapter.startLeScan(scanCallBack);
+    }else  return false; 
+  }
       
  
+  /**
+   * Get connection state.
+   * @return true if connected,false otherwise.
+   */
+  @SimpleFunction(description = "scanDevices")
+  public boolean getConnectionState(){
+    if(connectionState==BluetoothProfile.STATE_CONNECTED)return true; else return false;
+  }
+  
   @Override
   public void afterConnect(BluetoothBleBase bluetoothConnection) {
     Log.d(logTag,"afterConnect->He conectado!");
+    connectionState=BluetoothProfile.STATE_CONNECTED;
     //discoverServices(bluetoothGatt);
     
   }
@@ -192,7 +202,8 @@ public boolean scanDevices(){
 
   @Override
   public void beforeDisconnect(BluetoothBleBase bluetoothConnection) {
-    // TODO Auto-generated method stub
+    Log.d(logTag,"afterConnect->He desconectado!");
+    connectionState=BluetoothProfile.STATE_DISCONNECTED;
     
   }
   
@@ -203,9 +214,9 @@ public boolean scanDevices(){
       Log.d(logTag,"afterBleScanResult->anadidolista");
     }else{  Log.d(logTag,"afterBleScanResult->existe");}    
   }
-  
-  //private YailList bleScanResult = new YailList(); ;
+ 
   private List<BluetoothDevice> bleScanResult = new ArrayList<BluetoothDevice>();
+  private  int connectionState= BluetoothProfile.STATE_DISCONNECTED;
   
   private boolean checkIfExistsInList(String deviceAddress){
     int i=0;
@@ -217,22 +228,18 @@ public boolean scanDevices(){
     return encontrado;
   }
   
-  /*
-   * alecuba16
-   * Connects to a Bluetooth device with the given address and UUID. 
-   *
-   * If the address contains a space, the space and any characters after it are ignored. This
-   * facilitates passing an element of the list returned from the addressesAndNames method above.
+  /**
+   * Connects to a Bluetooth device with the given address. 
    *
    * @param deviceAddress deviceAddress
    * @return true if connection petition is processed correctly, false otherwise.
    */
-  @SimpleFunction(description = "connect")
+  @SimpleFunction(description = "Connects to a Bluetooth device with the given address")
   public boolean connect(String deviceAddress) {
     ((BluetoothAdapter) BluetoothReflection.getBluetoothAdapter()).stopLeScan(scanCallBack);
     BluetoothDevice device=getDeviceInList(deviceAddress);
     if(device!=null){
-      //TODO bluetoothGatt = device.connectGatt(container.$context(), false,gattCallBack);
+      bluetoothGatt = device.connectGatt(container.$context(), false,gattCallBack);
     }
     if(device==null||bluetoothGatt==null) return false; else return true;
   
@@ -249,26 +256,24 @@ public boolean scanDevices(){
     }
     return device;
   }
-  
-  /* TODO Arreglar problema aqui */
+    
   /**
    * get DeviceScanned.
-   * @return the number of found devices
-   */
-  /*
-  @SimpleProperty(description = "getNumberFoundDevices",
-  category = PropertyCategory.BEHAVIOR)
+   * 
+   * something.
+   * 
+   * @return true if connection petition is processed correctly, false otherwise.
+   */ 
+  @SimpleFunction(description = "Get number found devices")
   public int getNumberFoundDevices(){
-   return bleScanResult.size();
+    if(bleScanResult!=null&&bleScanResult.size()>0) return bleScanResult.size(); else return 0;
   }
-    
+   
   /**
    * get getFoundDevicesPerName.
    * @return a List with the name of the found devices.
    */
-  /*
-  @SimpleProperty(description = "getFoundDevicesPerName",
-  category = PropertyCategory.BEHAVIOR)
+  @SimpleFunction(description = "getFoundDevicesPerName")
   public List<String> getFoundDevicesPerName(){
     List<String> deviceNameslist= new ArrayList<String>();
     for(int i=0;i<bleScanResult.size();i++){
@@ -276,9 +281,20 @@ public boolean scanDevices(){
     }
    return deviceNameslist;
   }
-  */
-
   
+  /**
+   * get getFoundDevicesPerAddress.
+   * @return a List with the addrress of the found devices.
+   */
+  @SimpleFunction(description = "getFoundDevicesPerAddress")
+  public List<String> getFoundDevicesPerAddress(){
+    List<String> deviceNameslist= new ArrayList<String>();
+    for(int i=0;i<bleScanResult.size();i++){
+      deviceNameslist.add(bleScanResult.get(i).getAddress());
+    }
+   return deviceNameslist;
+  }
+ 
   /** alecuba16
   * Connects to a Bluetooth device with the given address and UUID. 
   *

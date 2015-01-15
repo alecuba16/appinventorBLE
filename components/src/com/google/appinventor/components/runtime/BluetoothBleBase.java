@@ -205,6 +205,7 @@ implements Component, OnDestroyListener, Deleteable {
        case BluetoothProfile.STATE_DISCONNECTING://Desconectando
          break;
        case BluetoothProfile.STATE_DISCONNECTED://Desconectado
+         fireBeforeDisconnectEvent();
          break;
        default:
            break;

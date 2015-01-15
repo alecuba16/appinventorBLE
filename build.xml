@@ -20,7 +20,78 @@
     <ant inheritAll="false" useNativeBasedir="true" dir="components"/>
     <ant inheritAll="false" useNativeBasedir="true" dir="buildserver" target="PlayApp"/>
   </target>
+  
+  <target name="rebuildall">
+	<!-- Stop -->
+	<echo message="Stopping"/>
+	<ant inheritAll="false" useNativeBasedir="true" dir="buildserver" target="StopLocalServers"/>
+	<!-- Clean -->
+	<echo message="Cleaning"/>
+	<ant inheritAll="false" useNativeBasedir="true" dir="appengine" target="clean"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="blocklyeditor" target="clean"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="aimerger" target="clean"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="buildserver" target="clean"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="common" target="clean"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="components" target="clean"/>
+    <delete dir="appengine/build" />
+    <delete dir="buildserver/build/" />
+    <delete dir="buildserver/reports/" />
+    <delete dir="build" />
+    <delete dir="bin"/>
+    <delete dir="reports"/>
+	<echo message="Building"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="appengine"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="blocklyeditor"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="common"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="buildserver"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="components"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="buildserver" target="PlayApp"/>
+    <echo message="Starting"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="buildserver" target="RunLocalBuildServer"/>
+  </target>
 
+  <target name="rebuildalloptimized">
+	<!-- Stop -->
+	<echo message="Stopping"/>
+	<ant inheritAll="false" useNativeBasedir="true" dir="buildserver" target="StopLocalServers"/>
+	<!-- Clean -->
+	<echo message="Cleaning"/>
+	<ant inheritAll="false" useNativeBasedir="true" dir="appengine" target="clean"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="blocklyeditor" target="clean"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="aimerger" target="clean"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="buildserver" target="clean"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="common" target="clean"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="components" target="clean"/>
+    <delete dir="appengine/build" />
+    <delete dir="buildserver/build/" />
+    <delete dir="buildserver/reports/" />
+    <delete dir="build" />
+    <delete dir="bin"/>
+    <delete dir="reports"/>
+	<echo message="Building"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="appengine"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="blocklyeditor"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="common"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="buildserver"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="components"/>
+    <!--<ant inheritAll="false" useNativeBasedir="true" dir="buildserver" target="PlayApp"/>-->
+    <echo message="Starting"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="buildserver" target="RunLocalBuildServer"/>
+  </target>
+  
+  <target name="rebuildmodules">
+	<!-- Stop -->
+	<echo message="Stopping"/>
+	<ant inheritAll="false" useNativeBasedir="true" dir="buildserver" target="StopLocalServers"/>
+	<!-- Clean -->
+	<echo message="Cleaning"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="components" target="clean"/>
+	<echo message="Building"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="components"/>
+    <echo message="Starting"/>
+    <ant inheritAll="false" useNativeBasedir="true" dir="buildserver" target="RunLocalBuildServer"/>
+  </target>
+  
   <target name="comps">
     <ant inheritAll="false" useNativeBasedir="true" dir="components"/>
     <ant inheritAll="false" useNativeBasedir="true" dir="buildserver" target="installplay"/>
