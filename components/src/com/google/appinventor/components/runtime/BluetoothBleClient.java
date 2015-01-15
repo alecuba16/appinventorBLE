@@ -169,6 +169,7 @@ public final class BluetoothBleClient extends BluetoothBleBase implements Blueto
 /**
  * scanDevices.
  * @param scanCallBack scanCallBack component
+ * @return true if scan is started,false otherwise.
  */
 @SimpleFunction(description = "scanDevices")
 public boolean scanDevices(){
@@ -216,5 +217,170 @@ public boolean scanDevices(){
     return encontrado;
   }
   
+  /*
+   * alecuba16
+   * Connects to a Bluetooth device with the given address and UUID. 
+   *
+   * If the address contains a space, the space and any characters after it are ignored. This
+   * facilitates passing an element of the list returned from the addressesAndNames method above.
+   *
+   * @param deviceAddress deviceAddress
+   * @return true if connection petition is processed correctly, false otherwise.
+   */
+  @SimpleFunction(description = "connect")
+  public boolean connect(String deviceAddress) {
+    ((BluetoothAdapter) BluetoothReflection.getBluetoothAdapter()).stopLeScan(scanCallBack);
+    BluetoothDevice device=getDeviceInList(deviceAddress);
+    if(device!=null){
+      //TODO bluetoothGatt = device.connectGatt(container.$context(), false,gattCallBack);
+    }
+    if(device==null||bluetoothGatt==null) return false; else return true;
+  
+  }
+  
+  
+  private BluetoothDevice getDeviceInList(String deviceAddress){
+    BluetoothDevice device=null;
+    boolean encontrado=false;
+    int i=0;
+    while(!encontrado && i<bleScanResult.size())
+    {
+      if(bleScanResult.get(i).getAddress()==deviceAddress) {encontrado=true;device=bleScanResult.get(i);}
+    }
+    return device;
+  }
+  
+  /* TODO Arreglar problema aqui */
+  /**
+   * get DeviceScanned.
+   * @return the number of found devices
+   */
+  /*
+  @SimpleProperty(description = "getNumberFoundDevices",
+  category = PropertyCategory.BEHAVIOR)
+  public int getNumberFoundDevices(){
+   return bleScanResult.size();
+  }
+    
+  /**
+   * get getFoundDevicesPerName.
+   * @return a List with the name of the found devices.
+   */
+  /*
+  @SimpleProperty(description = "getFoundDevicesPerName",
+  category = PropertyCategory.BEHAVIOR)
+  public List<String> getFoundDevicesPerName(){
+    List<String> deviceNameslist= new ArrayList<String>();
+    for(int i=0;i<bleScanResult.size();i++){
+      deviceNameslist.add(bleScanResult.get(i).getName());
+    }
+   return deviceNameslist;
+  }
+  */
 
+  
+  /** alecuba16
+  * Connects to a Bluetooth device with the given address and UUID. 
+  *
+  * If the address contains a space, the space and any characters after it are ignored. This
+  * facilitates passing an element of the list returned from the addressesAndNames method above.
+  *
+  * @param functionName the name of the SimpleFunction calling this method
+  * @param mac the address of the device
+  * @param serviceUUID the Service UUID
+  * @param characteristicUUID the characteristicUUID
+  * @param descriptorUUID the descriptorUUID
+  */
+  /*
+ public boolean connect(
+                        String functionName,
+                        String mac,
+                        String serviceUUID,
+                        String characteristicUUID,
+                        String descriptorUUID) {
+  
+   Object bluetoothAdapter = BluetoothReflection.getBluetoothAdapter();
+   if (bluetoothAdapter == null) {
+     form.dispatchErrorOccurredEvent(this,
+         functionName,
+         ErrorMessages.ERROR_BLUETOOTH_NOT_AVAILABLE);
+     return false;
+   }
+
+   if (!BluetoothReflection.isBluetoothEnabled(bluetoothAdapter)) {
+     form.dispatchErrorOccurredEvent(this, functionName, ErrorMessages.ERROR_BLUETOOTH_NOT_ENABLED);
+     return false;
+   }
+
+   // Truncate the address at the first space.
+   // This allows the address to be an element from the AddressesAndNames property.
+   int firstSpace = mac.indexOf(" ");
+   if (firstSpace != -1) {
+     mac = mac.substring(0, firstSpace);
+   }
+
+   if (!BluetoothReflection.checkBluetoothAddress(bluetoothAdapter, mac)) {
+     form.dispatchErrorOccurredEvent(this,
+         functionName,
+         ErrorMessages.ERROR_BLUETOOTH_INVALID_ADDRESS);
+     return false;
+   }
+
+   Object bluetoothDevice = BluetoothReflection.getRemoteDevice(bluetoothAdapter, mac);
+   if (!BluetoothReflection.isBonded(bluetoothDevice)) {
+     form.dispatchErrorOccurredEvent(this,
+         functionName,
+         ErrorMessages.ERROR_BLUETOOTH_NOT_PAIRED_DEVICE);
+     return false;
+   }
+
+   if (!isDeviceClassAcceptable(bluetoothDevice)) {
+     form.dispatchErrorOccurredEvent(this,
+         functionName,
+         ErrorMessages.ERROR_BLUETOOTH_NOT_REQUIRED_CLASS_OF_DEVICE);
+     return false;
+   }
+
+   UUID serviceuuid;
+   try {
+     serviceuuid = UUID.fromString(serviceUUID);
+   } catch (IllegalArgumentException e) {
+     form.dispatchErrorOccurredEvent(this,
+         functionName,
+         ErrorMessages.ERROR_BLUETOOTH_INVALID_UUID,
+         serviceUUID);
+     return false;
+   }
+
+   UUID characteristicuuid;
+   try {
+     characteristicuuid = UUID.fromString(characteristicUUID);
+   } catch (IllegalArgumentException e) {
+     form.dispatchErrorOccurredEvent(this,
+         functionName,
+         ErrorMessages.ERROR_BLUETOOTH_INVALID_UUID,
+         serviceUUID);
+     return false;
+   }
+
+   UUID descriptoruuid;
+   try {
+     descriptoruuid = UUID.fromString(descriptorUUID);
+   } catch (IllegalArgumentException e) {
+     form.dispatchErrorOccurredEvent(this,
+         functionName,
+         ErrorMessages.ERROR_BLUETOOTH_INVALID_UUID,
+         serviceUUID);
+     return false;
+   }
+
+   UUID_SERVICIO = serviceuuid;
+   UUID_CARACT = characteristicuuid;
+   UUID_CONFIG_DESC = descriptoruuid;
+
+   //TODO Disconnect here
+
+   //connect(bluetoothDevice);
+   return true;
+ }*/
 }
