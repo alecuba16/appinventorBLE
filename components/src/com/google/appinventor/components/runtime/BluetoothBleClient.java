@@ -2,26 +2,15 @@ package com.google.appinventor.components.runtime;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCallback;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattDescriptor;
-import android.bluetooth.BluetoothGattService;
-import android.bluetooth.BluetoothProfile;
 import android.util.Log;
 
 import com.google.appinventor.components.annotations.DesignerComponent;
-import com.google.appinventor.components.annotations.PropertyCategory;
 import com.google.appinventor.components.annotations.SimpleFunction;
 import com.google.appinventor.components.annotations.SimpleObject;
-import com.google.appinventor.components.annotations.SimpleProperty;
 import com.google.appinventor.components.annotations.UsesPermissions;
 import com.google.appinventor.components.common.ComponentCategory;
 import com.google.appinventor.components.common.YaVersion;
@@ -41,16 +30,16 @@ public final class BluetoothBleClient extends BluetoothBleBase implements Blueto
   private final List<Component> attachedComponents = new ArrayList<Component>();
   private Set<Integer> acceptableDeviceClasses;
 
-  private transient BluetoothGatt bluetoothGatt = null;
-  private static UUID UUID_SERVICIO = UUID.fromString("0000180d-0000-1000-8000-00805f9b34fb");
-  private static UUID UUID_CARACT = UUID.fromString("00002a37-0000-1000-8000-00805f9b34fb");
-  private static UUID UUID_CONFIG_DESC = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
+ 
+  //private static UUID UUID_SERVICIO = UUID.fromString("0000180d-0000-1000-8000-00805f9b34fb");
+  //private static UUID UUID_CARACT = UUID.fromString("00002a37-0000-1000-8000-00805f9b34fb");
+  //private static UUID UUID_CONFIG_DESC = UUID.fromString("00002902-0000-1000-8000-00805f9b34fb");
   
   /**
    * Creates a new BluetoothClient.
    */
-  public BluetoothBleClient(ComponentContainer container) {
-    super(container, "BluetoothClient");
+  public BluetoothBleClient(ComponentContainer containerup) {
+    super(containerup, "BluetoothClient");
   }
 
   
@@ -131,41 +120,7 @@ public final class BluetoothBleClient extends BluetoothBleBase implements Blueto
     Object bluetoothDevice = BluetoothReflection.getRemoteDevice(bluetoothAdapter, address);
     return BluetoothReflection.isBonded(bluetoothDevice);
   }
-
-  /**
-   * Returns the list of paired Bluetooth devices. Each element of the returned
-   * list is a String consisting of the device's address, a space, and the
-   * device's name.
-   *
-   * This method calls isDeviceClassAcceptable to determine whether to include
-   * a particular device in the returned list.
-   *
-   * @return a List representing the addresses and names of paired
-   *         Bluetooth devices
-   */
-  @SimpleProperty(description = "The addresses and names of paired Bluetooth devices",
-      category = PropertyCategory.BEHAVIOR)
-  public List<String> AddressesAndNames() {
-    List<String> addressesAndNames = new ArrayList<String>();
-
-    Object bluetoothAdapter = BluetoothReflection.getBluetoothAdapter();
-    if (bluetoothAdapter != null) {
-      if (BluetoothReflection.isBluetoothEnabled(bluetoothAdapter)) {
-        for (Object bluetoothDevice : BluetoothReflection.getBondedDevices(bluetoothAdapter)) {
-         // if (isDeviceClassAcceptable(bluetoothDevice)) {
-            String name = BluetoothReflection.getBluetoothDeviceName(bluetoothDevice);
-            String address = BluetoothReflection.getBluetoothDeviceAddress(bluetoothDevice);
-            addressesAndNames.add(address + " " + name);
-         // }
-        }
-      }
-    }
-
-    return addressesAndNames;
-  }
-
  
-  
   /**
    * scanDevices.
    * @param scanCallBack scanCallBack component
@@ -180,52 +135,22 @@ public final class BluetoothBleClient extends BluetoothBleBase implements Blueto
       return bluetoothAdapter.startLeScan(scanCallBack);
     }else  return false; 
   }
-      
- 
-  /**
-   * Get connection state.
-   * @return true if connected,false otherwise.
-   */
-  @SimpleFunction(description = "scanDevices")
-  public boolean getConnectionState(){
-    if(connectionState==BluetoothProfile.STATE_CONNECTED)return true; else return false;
-  }
-  
+       
   @Override
   public void afterConnect(BluetoothBleBase bluetoothConnection) {
     Log.d(logTag,"afterConnect->He conectado!");
-    connectionState=BluetoothProfile.STATE_CONNECTED;
-    //discoverServices(bluetoothGatt);
-    
+    discoverServices(bluetoothGatt);    
   }
 
 
   @Override
   public void beforeDisconnect(BluetoothBleBase bluetoothConnection) {
-    Log.d(logTag,"afterConnect->He desconectado!");
-    connectionState=BluetoothProfile.STATE_DISCONNECTED;
-    
+    Log.d(logTag,"afterConnect->He desconectado!");    
   }
   
   @Override
-  public void afterBleScanResult(BluetoothBleBase bluetoothConnection,BluetoothDevice device) {
-    if(!checkIfExistsInList(device.getAddress())){
-      bleScanResult.add(device);
-      Log.d(logTag,"afterBleScanResult->anadidolista");
-    }else{  Log.d(logTag,"afterBleScanResult->existe");}    
-  }
- 
-  private List<BluetoothDevice> bleScanResult = new ArrayList<BluetoothDevice>();
-  private  int connectionState= BluetoothProfile.STATE_DISCONNECTED;
-  
-  private boolean checkIfExistsInList(String deviceAddress){
-    int i=0;
-    boolean encontrado=false;
-    while(!encontrado && i<bleScanResult.size())
-    {
-      if(bleScanResult.get(i).getAddress()==deviceAddress) encontrado=true;
-    }
-    return encontrado;
+  public void afterBleScanResult(BluetoothBleBase bluetoothConnection) {
+      Log.d(logTag,"afterBleScanResult->invocado en BleClient");
   }
   
   /**
@@ -235,28 +160,47 @@ public final class BluetoothBleClient extends BluetoothBleBase implements Blueto
    * @return true if connection petition is processed correctly, false otherwise.
    */
   @SimpleFunction(description = "Connects to a Bluetooth device with the given address")
-  public boolean connect(String deviceAddress) {
-    ((BluetoothAdapter) BluetoothReflection.getBluetoothAdapter()).stopLeScan(scanCallBack);
-    BluetoothDevice device=getDeviceInList(deviceAddress);
-    if(device!=null){
-      bluetoothGatt = device.connectGatt(container.$context(), false,gattCallBack);
-    }
-    if(device==null||bluetoothGatt==null) return false; else return true;
-  
+  public boolean connectWithAddress(String deviceAddress) {
+    BluetoothAdapter.getDefaultAdapter().stopLeScan(scanCallBack);
+    //BluetoothDevice device=scanCallBack.getDeviceInList(deviceAddress,false);
+    //BluetoothDevice device=((BluetoothAdapter) BluetoothReflection.getBluetoothAdapter()).getRemoteDevice(deviceAddress);
+    if(device2!=null){
+      Log.d(logTag,container.$context().getTitle().toString());
+      bluetoothGatt = device2.connectGatt(container.$context().getApplicationContext(), true,gattCallBack);
+      if(bluetoothGatt==null){
+        Log.d(logTag,"->Dispositivo esta en la lista, pero connectGatt es null");
+        return false;
+      }else{
+        Log.d(logTag,"connectWithName->conectado a:"+bluetoothGatt.getDevice().getName()+" al gat!");
+        return true;
+        }
+    }else{Log.d(logTag,"connectWithAddress->Dispositivo "+deviceAddress+" no esta en la lista"); return false;}
   }
   
-  
-  private BluetoothDevice getDeviceInList(String deviceAddress){
-    BluetoothDevice device=null;
-    boolean encontrado=false;
-    int i=0;
-    while(!encontrado && i<bleScanResult.size())
-    {
-      if(bleScanResult.get(i).getAddress()==deviceAddress) {encontrado=true;device=bleScanResult.get(i);}
-    }
-    return device;
+  /**
+   * Connects to a Bluetooth device with the given deviceName. 
+   *
+   * @param deviceName deviceName
+   * @return true if connection petition is processed correctly, false otherwise.
+   */
+  @SimpleFunction(description = "Connects to a Bluetooth device with the given Name")
+  public boolean connectWithName(String deviceName) {
+    BluetoothAdapter.getDefaultAdapter().stopLeScan(scanCallBack);
+    //TODO BluetoothDevice device=scanCallBack.getDeviceInList(deviceName,false);
+    //BluetoothDevice device=((BluetoothAdapter) BluetoothReflection.getBluetoothAdapter()).getRemoteDevice(scanCallBack.getDevicerAddressPerName(deviceName));
+    if(device2!=null){
+      Log.d(logTag,"->1"+container.$context().getTitle().toString());
+      bluetoothGatt = device2.connectGatt(container.$context(), true,gattCallBack);
+      if(bluetoothGatt==null){
+        Log.d(logTag,"connectWithName->Dispositivo esta en la lista, pero connectGatt es null");
+        return false;
+      }else{
+        Log.d(logTag,"connectWithName->conectado a:"+bluetoothGatt.getDevice().getName()+" al gat!");
+        return true;        
+        }
+    }else{Log.d(logTag,"connectWithName->Dispositivo "+deviceName+" no esta en la lista"); return false;} 
   }
-    
+  
   /**
    * get DeviceScanned.
    * 
@@ -266,7 +210,7 @@ public final class BluetoothBleClient extends BluetoothBleBase implements Blueto
    */ 
   @SimpleFunction(description = "Get number found devices")
   public int getNumberFoundDevices(){
-    if(bleScanResult!=null&&bleScanResult.size()>0) return bleScanResult.size(); else return 0;
+    return scanCallBack.getNumberFoundDevices();
   }
    
   /**
@@ -275,11 +219,7 @@ public final class BluetoothBleClient extends BluetoothBleBase implements Blueto
    */
   @SimpleFunction(description = "getFoundDevicesPerName")
   public List<String> getFoundDevicesPerName(){
-    List<String> deviceNameslist= new ArrayList<String>();
-    for(int i=0;i<bleScanResult.size();i++){
-      deviceNameslist.add(bleScanResult.get(i).getName());
-    }
-   return deviceNameslist;
+   return  scanCallBack.getDeviceNames();
   }
   
   /**
@@ -288,11 +228,7 @@ public final class BluetoothBleClient extends BluetoothBleBase implements Blueto
    */
   @SimpleFunction(description = "getFoundDevicesPerAddress")
   public List<String> getFoundDevicesPerAddress(){
-    List<String> deviceNameslist= new ArrayList<String>();
-    for(int i=0;i<bleScanResult.size();i++){
-      deviceNameslist.add(bleScanResult.get(i).getAddress());
-    }
-   return deviceNameslist;
+    return  scanCallBack.getDeviceAddress();
   }
  
   /** alecuba16

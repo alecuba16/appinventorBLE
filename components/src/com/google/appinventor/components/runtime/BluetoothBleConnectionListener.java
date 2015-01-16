@@ -1,7 +1,5 @@
 package com.google.appinventor.components.runtime;
 
-import android.bluetooth.BluetoothDevice;
-
 /**
  * Callback for receiving Bluetooth Ble connection events
  *
@@ -22,5 +20,5 @@ interface BluetoothBleConnectionListener {
   /**
    * 
    */
-  void afterBleScanResult(BluetoothBleBase bluetoothConnection,BluetoothDevice device);
+  void afterBleScanResult(BluetoothBleBase bluetoothConnection);
 }
