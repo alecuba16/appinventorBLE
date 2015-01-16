@@ -396,10 +396,20 @@ implements Component, OnDestroyListener, Deleteable {
     Caracteristica caracteristica = getCharacteristicFromUUID(servicio,characteristicuuid);
     List<String> listaDescriptores = new ArrayList<String>();
     for(int i=0;i<caracteristica.descriptores.size();i++){
-      listaDescriptores.add(caracteristica.descriptores.get(i).uuidDescriptor.toString().replace("\"", ""));
+      listaDescriptores.add(caracteristica.descriptores.get(i).descriptor.getUuid().toString().replace("\"", ""));
     }
     return listaDescriptores;
   }
+  
+  /**
+   * getLastValue of the notification.
+   * @return returns the value .
+   */
+  @SimpleFunction(description =  "getLastValue of the notification.")
+  public int getLastValue(){
+    return value;
+  }
+  
   
   private Servicio getServiceFromUUID(String uuidofService){
     boolean encontrado=false;
@@ -407,7 +417,7 @@ implements Component, OnDestroyListener, Deleteable {
     Servicio serviciotemp=null;
     while(!encontrado && itr.hasNext()){
       serviciotemp=itr.next();
-      if(serviciotemp.uuidServicio.toString()==uuidofService){encontrado=true;}
+      if(serviciotemp.service.getUuid().toString().equals(uuidofService)){encontrado=true;}
     }
     if(!encontrado) serviciotemp=null;
     return serviciotemp;
@@ -419,7 +429,7 @@ implements Component, OnDestroyListener, Deleteable {
     Caracteristica caracteristicaTemp=null;
     while(!encontrado && itr.hasNext()){
       caracteristicaTemp=itr.next();
-      if(caracteristicaTemp.uuidCaracteristica.toString()==uuidofcharacteristic){encontrado=true;}
+      if(caracteristicaTemp.characteristic.getUuid().toString().equals(uuidofcharacteristic)){encontrado=true;}
     }
     if(!encontrado) caracteristicaTemp=null;
     return caracteristicaTemp;
@@ -431,43 +441,39 @@ implements Component, OnDestroyListener, Deleteable {
     Descriptor descriptorTemp=null;
     while(!encontrado && itr.hasNext()){
       descriptorTemp=itr.next();
-      if(descriptorTemp.uuidDescriptor.toString()==uuidofdescriptor){encontrado=true;}
+      if(descriptorTemp.descriptor.getUuid().toString().equals(uuidofdescriptor)){encontrado=true;}
     }
     if(!encontrado) descriptorTemp=null;
     return descriptorTemp;
   }
   
+  public int value=0;
+  
   public final List<Servicio> serviciosCaracteristicas = new ArrayList<Servicio>();
   
   public class Servicio  {
-    public UUID uuidServicio=null;
     public List<Caracteristica> caracteristicas=null;
     public BluetoothGattService service = null;
-    public Servicio( final BluetoothGattService yo,final UUID uuidServicio,final List<Caracteristica> caracteristicas){
+    public Servicio( final BluetoothGattService yo,final List<Caracteristica> caracteristicas){
       this.service=yo;
-      this.uuidServicio=uuidServicio;
       this.caracteristicas=caracteristicas;
     }
   
   }
   
   public class Caracteristica {
-    public UUID uuidCaracteristica=null;
     public BluetoothGattCharacteristic characteristic = null;
     public List<Descriptor> descriptores=null;
-    public Caracteristica(final BluetoothGattCharacteristic yo,final UUID uuidCaracteristica,final List<Descriptor> descriptores){
+    public Caracteristica(final BluetoothGattCharacteristic yo,final List<Descriptor> descriptores){
       this.characteristic=yo;
-      this.uuidCaracteristica=uuidCaracteristica;
       this.descriptores=descriptores;
     }
   }
   
   public class Descriptor {
-    public UUID uuidDescriptor=null;
     public BluetoothGattDescriptor descriptor = null;
-    public Descriptor(final BluetoothGattDescriptor yo,final UUID uuidDescriptor){
+    public Descriptor(final BluetoothGattDescriptor yo){
       this.descriptor=yo;
-      this.uuidDescriptor=uuidDescriptor;
     }
   }
   protected BluetoothGattCallback gattCallBack = new MiGattCallBack();
@@ -526,13 +532,13 @@ implements Component, OnDestroyListener, Deleteable {
            List<Descriptor> listadescriptores = new ArrayList<Descriptor>();
            while(itr_Descr.hasNext()){//Creo una lista de descriptores
              BluetoothGattDescriptor descTemp=itr_Descr.next();
-             listadescriptores.add(new Descriptor(descTemp,descTemp.getUuid()));
+             listadescriptores.add(new Descriptor(descTemp));
              Log.d(logTag,"->Anadido descriptor");
            }
-           listacaracteristicas.add(new Caracteristica(charTemp,charTemp.getUuid(),listadescriptores));
+           listacaracteristicas.add(new Caracteristica(charTemp,listadescriptores));
            Log.d(logTag,"->Anadido caracteristica");
          }
-         serviciosCaracteristicas.add(new Servicio(serviciotemp,serviciotemp.getUuid(),listacaracteristicas));
+         serviciosCaracteristicas.add(new Servicio(serviciotemp,listacaracteristicas));
          Log.d(logTag,"->Anadido servicio");
          serviciostxt.append(serviciotemp.getUuid()+",");
        }
@@ -580,6 +586,7 @@ implements Component, OnDestroyListener, Deleteable {
        mensaje_debug.append(characteristic.getIntValue(
            BluetoothGattCharacteristic.FORMAT_UINT8, i));
      }
+     value=characteristic.getIntValue(BluetoothGattCharacteristic.FORMAT_UINT8,1);
      Log.d(logTag, mensaje_debug.toString());
    }
 
