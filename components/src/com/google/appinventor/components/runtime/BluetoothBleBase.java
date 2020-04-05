@@ -34,7 +34,7 @@ import android.util.Log;
 /**
  * An abstract base class for the Bluetooth BLE.
  *
- * @author alecuba16@gmail.com (Alejandro Blanco Martinez)
+ * @author alecuba.16@googlemail.com (Alejandro Blanco Martinez)
  */
 @SimpleObject
 @UsesPermissions(permissionNames =
